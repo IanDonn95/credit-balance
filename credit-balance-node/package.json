@@ -1,0 +1,10 @@
+{
+  "name": "credit-balance-node",
+  "version": "1.0.0",
+  "main": "dist/engine.js",
+  "author": "ianhuffman",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc --outDir dist src/Engine.ts & node dist/engine.js"
+  }
+}
