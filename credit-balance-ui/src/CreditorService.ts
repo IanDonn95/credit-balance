@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { Creditor } from "./Types";
 
 const backendApiUrl = 'http://localhost:3001';
