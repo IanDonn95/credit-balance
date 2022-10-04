@@ -48,7 +48,7 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
                 }
             });
 
-            //add new rows to the map, initially unselected
+            // add new rows to the map, initially unselected
             newRows.concat(rows.filter(row => newRows.every(cr => cr.id !== row.id))
                 .map(row => ({selected: false, id: row.id})));
 
@@ -70,11 +70,11 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
     };
 
     const allSelected = useMemo(() => {
-        let allSelected = true;
+        let all = true;
         selectedRows.forEach((selected) => {
-            allSelected = allSelected && selected;
+            all = all && selected;
         });
-        return allSelected;
+        return all;
     }, [selectedRows]);
 
     const toggleAll = () => {
