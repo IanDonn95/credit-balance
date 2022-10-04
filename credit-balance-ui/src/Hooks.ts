@@ -78,7 +78,6 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
     }, [selectedRows]);
 
     const toggleAll = () => {
-        console.log(selectedRows, allSelected)
         setSelectedRows(currentRows => {
             const newMap = new Map<number, boolean>();
             currentRows.forEach((selected, rowId) => {

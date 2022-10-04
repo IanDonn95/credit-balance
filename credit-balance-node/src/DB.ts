@@ -13,10 +13,10 @@ const client = new MongoClient(`${MONGO_URL}?authSource=%24external&authMechanis
 	serverApi: ServerApiVersion.v1
 });
 
-async function connect() {
+async function connect(collectionName: string) {
 	await client.connect();
 	const database = client.db("creditorsDB");
-	const collection = database.collection<Creditor>("creditors");
+	const collection = database.collection<Creditor>(collectionName);
 	return collection;
 }
 
@@ -28,9 +28,9 @@ async function close() {
 	}
 }
 
-export async function query<D>(action: (collection: Collection<Creditor>) => Promise<D>) {
+export async function query<D>(collectionName: string, action: (collection: Collection<Creditor>) => Promise<D>) {
 	try {
-		const collection = await connect();
+		const collection = await connect(collectionName);
 		return await action(collection);
 	} catch (e) {
 		console.error(e);

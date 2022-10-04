@@ -1,0 +1,53 @@
+$first-col-width: 65px;
+
+table.creditors {
+    width: 100%;
+
+    th {
+        text-align: start;
+
+    }
+
+    th.border {
+        border: 1px solid black;
+    }
+
+    td.border {
+        border: 1px solid gray;
+    }
+
+    .right {
+        text-align: end;
+    }
+
+    .checkbox {
+        width: $first-col-width;
+        text-align: center;
+    }
+}
+
+button {
+    background-color: #428BCA;
+    border: 1px solid #357EBD;
+    border-radius: 5px;
+    color: white;
+    padding: 5px 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.total-row {
+    background-color: #87CEEB;
+    display: grid;
+    grid-template-columns: $first-col-width 1fr;
+    text-align: end;
+    margin-bottom: 5px;
+}
+
+.counts-row {
+    display: flex;
+
+    div {
+        flex: 0 0 200px;
+    }
+}

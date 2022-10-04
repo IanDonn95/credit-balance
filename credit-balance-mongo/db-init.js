@@ -1,9 +1,6 @@
 use('creditorsDB');
 
-db.creditors.drop();
-db.createCollection('creditors');
-
-db.creditors.insertMany([
+const startingData = [
   {
     "id": 1,
     "creditorName": "CBNA",
@@ -84,4 +81,15 @@ db.creditors.insertMany([
     "minPaymentPercentage": 3.50,
     "balance": 235.00
   }
-]);
+];
+
+const maxId = startingData.reduce((m, c) => Math.max(m, c.id), 0) + 1;
+
+db.creditors.drop();
+db.createCollection('creditors');
+
+db.creditors.insertMany(startingData);
+
+db.creditorIdSequence.drop();
+db.createCollection('creditorIdSequence');
+db.creditorIdSequence.insertOne({id: maxId});
