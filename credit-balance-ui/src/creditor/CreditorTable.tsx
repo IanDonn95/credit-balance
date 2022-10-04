@@ -1,11 +1,12 @@
 import { FC, useMemo } from "react";
 import { Creditor } from "../Types";
 import './CreditorTable.scss';
-import { useRowSelectors } from "../Hooks";
+import { useModal, useRowSelectors } from "../Hooks";
+import AddCreditorModal from "./AddCreditorModal";
 
 interface CreditorTableProps {
     creditors: Creditor[];
-    handleAddDebt: () => void;
+    handleAddDebt: (creditor: Omit<Creditor, 'id'>) => Promise<void>;
 }
 
 const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => {
@@ -14,6 +15,8 @@ const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => 
     const totalSelectedBalance = useMemo(() => creditors.reduce((total, creditor) => {
         return selectedRows.get(creditor.id) ? total + creditor.balance : total;
     }, 0), [creditors, selectedRows]);
+
+    const [modalOpen, toggleModalOpen] = useModal();
 
     // Maps unfortunately lack the pretty array map/reduce functions, but this code is essentially the same
     const selectedRowsCount = useMemo(() => {
@@ -57,7 +60,7 @@ const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => 
                 </tr>)}
             </tbody>
         </table>
-        <button onClick={handleAddDebt}>Add Debt</button>
+        <button onClick={toggleModalOpen}>Add Debt</button>
         <div className="total-row">
             <div><strong>Total</strong></div>
             <div><strong>{currencyFormatter.format(totalSelectedBalance)}</strong></div>
@@ -66,6 +69,8 @@ const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => 
             <div><strong>Total Row Count : {creditors.length}</strong></div>
             <div><strong>Check Row Count : {selectedRowsCount}</strong></div>
         </div>
+
+        <AddCreditorModal open={modalOpen} toggleOpen={toggleModalOpen} addCreditor={handleAddDebt} />
     </div>;
 };
 

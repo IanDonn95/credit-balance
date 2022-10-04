@@ -89,3 +89,8 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
 
     return [selectedRows, allSelected, toggleRow, toggleAll];
 }
+
+export const useModal = (): [boolean, () => void] => {
+    const [open, setOpen] = useState(false);
+    return [open, () => setOpen(o => !o)];
+};

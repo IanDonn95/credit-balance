@@ -3,23 +3,29 @@ import { useDataSource } from './Hooks';
 import { addCreditor, getGoodCreditors } from './creditor/CreditorService';
 import CreditorTable from './creditor/CreditorTable';
 import './App.scss';
+import { Creditor } from './Types';
 
 function App() {
+	// load creditor data from node backend
 	const goodCreditorsDataSource = useCallback(getGoodCreditors, []);
 	const [creditors, creditorsLoading, creditorsError, setCreditors] = useDataSource(goodCreditorsDataSource);
 
-	const handleAddDebt = () => {
-		addCreditor({
-			creditorName: 'BIG BANK',
-			firstName: 'Ian',
-			lastName: 'Huffman',
-			minPaymentPercentage: 4.1,
-			balance: 12345
-		});
-	}
+	// setup creditor creation call here as we have access to the table data setter at the app level
+	const handleAddDebt = (creditor: Omit<Creditor, 'id'>) => {
+		return addCreditor(creditor)
+			.then(setCreditors)
+			.catch(e => console.error(e)); // we could add toast error popups to handle potential errors here, but it felt out of scope
+	};
 
 	return <div className="app">
-		{creditors && <CreditorTable creditors={creditors} handleAddDebt={handleAddDebt} />}
+		{creditorsError ?
+			<span>There was an error loading the creditor table. Please try again later.</span>
+			:
+			<>
+				{creditorsLoading && <span>Loading...</span>}
+				{creditors && <CreditorTable creditors={creditors} handleAddDebt={handleAddDebt} />}
+			</>
+		}
 	</div>;
 }
 
