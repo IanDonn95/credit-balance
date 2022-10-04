@@ -10,7 +10,7 @@ interface CreditorTableProps {
 }
 
 const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => {
-    const [selectedRows, allSelected, toggleRow, toggleAll] = useRowSelectors(creditors);
+    const [selectedRows, allSelected, toggleRow, toggleAll] = useRowSelectors(creditors); // offload the selectors to a custom hook
 
     const totalSelectedBalance = useMemo(() => creditors.reduce((total, creditor) => {
         return selectedRows.get(creditor.id) ? total + creditor.balance : total;
@@ -74,6 +74,7 @@ const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => 
     </div>;
 };
 
+// formatters to render raw numbers using predefined patterns
 const currencyFormatter = Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'

@@ -1,6 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
-type DataSource<D> = () => Promise<D>
+type DataSource<D> = () => Promise<D>;
+
+/**
+ * this is a data fetching pattern I settled upon at work that I really liked
+ * it just needs a stable data source function, and will fetch new data if that source changes
+ * it handles loading and error states internally, instead of forcing every page to set one up for each fetch themselves
+ * finally, it provides access to the setData function, as creates/updates usually return fresher data
+ */
 export function useDataSource<D>(get: DataSource<D>): [
     D | null,
     boolean,
@@ -21,6 +28,11 @@ export function useDataSource<D>(get: DataSource<D>): [
     return [data, dataLoading, error, setData];
 }
 
+
+/**
+ * track how whether each row has been selected, mapping the creditor id to a boolean value
+ * provides easy to use update functions, and a precalculated count of selected rows
+ */
 export function useRowSelectors<D extends {id: number}>(rows: D[]): [
     Map<number, boolean>,
     boolean,
@@ -39,7 +51,7 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
     // maintain selected rows across data updates
     useEffect(() => {
         setSelectedRows(currentRows => {
-            const newRows: {selected: boolean, id: number}[] = [];
+            let newRows: {selected: boolean, id: number}[] = [];
 
             // pass rows still in the data to the new map
             currentRows.forEach((selected, id) => {
@@ -47,9 +59,8 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
                     newRows.push({selected, id});
                 }
             });
-
             // add new rows to the map, initially unselected
-            newRows.concat(rows.filter(row => newRows.every(cr => cr.id !== row.id))
+            newRows = newRows.concat(rows.filter(row => newRows.every(nr => nr.id !== row.id))
                 .map(row => ({selected: false, id: row.id})));
 
             // convert back to well-typed map
@@ -59,6 +70,7 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
         });
     }, [rows]);
 
+    // transfer all map entries to the new map, swapping the value of the toggle row
     const toggleRow = (id: number) => {
         setSelectedRows(currentRows => {
             const newMap = new Map<number, boolean>();
@@ -77,6 +89,7 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
         return all;
     }, [selectedRows]);
 
+    // transfer all entries over to the new map, setting their value to !allSelected
     const toggleAll = () => {
         setSelectedRows(currentRows => {
             const newMap = new Map<number, boolean>();
@@ -90,6 +103,7 @@ export function useRowSelectors<D extends {id: number}>(rows: D[]): [
     return [selectedRows, allSelected, toggleRow, toggleAll];
 }
 
+// simple hook to provide a modal open state
 export const useModal = (): [boolean, () => void] => {
     const [open, setOpen] = useState(false);
     return [open, () => setOpen(o => !o)];

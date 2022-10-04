@@ -9,12 +9,14 @@ interface AddCreditorModalProps {
 }
 
 const AddCreditorModal: FC<AddCreditorModalProps> = ({ open, toggleOpen, addCreditor }) => {
+    // controlled form state
     const [creditorName, setCreditorName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [minPaymentPercentage, setMinPaymentPercentage] = useState('');
     const [balance, setBalance] = useState('');
 
+    // reset the form data whenever the modal closes (it always renders, so it is never unmounted during normal operation)
     useEffect(() => {
         if (!open) {
             setCreditorName('');
@@ -25,8 +27,9 @@ const AddCreditorModal: FC<AddCreditorModalProps> = ({ open, toggleOpen, addCred
         }
     }, [open]);
 
+    // take the <form> submit event and push the new data on to the backend
     const createCreditor = (evt: FormEvent) => {
-        evt.preventDefault();
+        evt.preventDefault(); // forms usually go somewhere after submission, so we need to tell the browser not to navigate away
         const creditor = {
             creditorName,
             firstName,
@@ -73,7 +76,7 @@ const AddCreditorModal: FC<AddCreditorModalProps> = ({ open, toggleOpen, addCred
                         />
                         <label htmlFor='minPaymentPercentage'>Min Pay &#37;</label>
                         <div><input
-                            type='text'
+                            type='text' /** I've found that number input aren't ideal for a lot of use cases, but text + a pattern is a great alternative */
                             id='minPaymentPercentage'
                             value={minPaymentPercentage}
                             onChange={evt => {
@@ -82,11 +85,11 @@ const AddCreditorModal: FC<AddCreditorModalProps> = ({ open, toggleOpen, addCred
                                     setMinPaymentPercentage(evt.target.value);
                                 }
                             }}
-                            pattern={'[0-9]{0,2}([.][0-9]{0,2})?'}
+                            pattern={'[0-9]{0,2}([.][0-9]{0,2})?' /** ex. 12.34 */}
                             required
                         />&#37;</div>
                         <label htmlFor='balance'>Balance</label>
-                        <div>$<input
+                        <div>&#36;<input
                             type='text'
                             id='balance'
                             value={balance}
@@ -96,7 +99,7 @@ const AddCreditorModal: FC<AddCreditorModalProps> = ({ open, toggleOpen, addCred
                                     setBalance(evt.target.value);
                                 }
                             }}
-                            pattern={'[0-9]*([.][0-9]{0,2})?'}
+                            pattern={'[0-9]*([.][0-9]{0,2})?' /** ex. 1234.56 */}
                             required
                         /></div>
                     </div>
