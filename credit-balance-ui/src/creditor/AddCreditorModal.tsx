@@ -1,4 +1,4 @@
-import { FC, useState, MouseEvent, useEffect, FormEvent } from "react";
+import { FC, useState, useEffect, FormEvent } from "react";
 import { Creditor } from "../Types";
 import './AddCreditorModal.scss';
 
