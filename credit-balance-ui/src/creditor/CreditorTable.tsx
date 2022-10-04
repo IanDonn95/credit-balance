@@ -21,7 +21,7 @@ const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => 
     // Maps unfortunately lack the pretty array map/reduce functions, but this code is essentially the same
     const selectedRowsCount = useMemo(() => {
         let count = 0;
-        selectedRows.forEach((selected) => { if (selected) {count++;} });
+        selectedRows.forEach((selected) => { if (selected) { count++; } });
         return count;
     }, [selectedRows]);
 
@@ -46,11 +46,15 @@ const CreditorTable: FC<CreditorTableProps> = ({ creditors, handleAddDebt }) => 
             <tbody>
                 {creditors.map(creditor => <tr key={creditor.id}>
                     <td className="checkbox">
-                        <input
+                        {/**
+                         * checkboxes are initialized in an effect, so there's a brief period where the input may have an undefined value
+                         * the 'has' check avoids React warnings about uncontrolled components becoming a controlled component
+                         */}
+                        {selectedRows.has(creditor.id) && <input
                             type='checkbox'
                             checked={selectedRows.get(creditor.id)}
                             onChange={() => toggleRow(creditor.id)}
-                        />
+                        />}
                     </td>
                     <td className="border"><span>{creditor.creditorName}</span></td>
                     <td className="border"><span>{creditor.firstName}</span></td>

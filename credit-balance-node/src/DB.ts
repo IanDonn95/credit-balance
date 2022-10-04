@@ -1,8 +1,8 @@
 import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
 import dotenv from 'dotenv';
 import { Creditor } from './Types';
-dotenv.config();
 
+dotenv.config();
 
 const MONGO_CREDENTIALS = process.env.MONGO_CREDENTIALS;
 const MONGO_URL = process.env.MONGO_URL;
@@ -20,22 +20,11 @@ async function connect(collectionName: string) {
 	return collection;
 }
 
-async function close() {
-	try {
-		// await client.close(); // silently close when node exits instead?
-	} catch (e) {
-		console.error(e);
-	}
-}
-
 export async function query<D>(collectionName: string, action: (collection: Collection<Creditor>) => Promise<D>) {
 	try {
 		const collection = await connect(collectionName);
 		return await action(collection);
 	} catch (e) {
 		console.error(e);
-	}
-	 finally {
-		await close();
 	}
 }
