@@ -3,8 +3,9 @@ import { Creditor } from './Types';
 
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
+const MONGO_URL = process.env.MONGO_URL;
 
-const client = new MongoClient(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@cluster0.qbvmgv5.mongodb.net/test`);
+const client = new MongoClient(`mongodb+srv://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_URL}`);
 
 async function connect(collectionName: string) {
 	await client.connect();
