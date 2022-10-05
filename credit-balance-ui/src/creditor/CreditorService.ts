@@ -1,6 +1,6 @@
 import { Creditor } from "../Types";
 
-const backendApiUrl = 'http://localhost:3001';
+const backendApiUrl = 'http://localhost:7071/api';
 
 // get creditors for the table that match certain criteria (high balance, reasonable min pay percentage)
 export const getGoodCreditors = (): Promise<Creditor[]> => {
