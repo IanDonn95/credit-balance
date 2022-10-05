@@ -1,4 +1,4 @@
-import { Collection, MongoClient, ServerApiVersion } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 import { Creditor } from './Types';
 
 const MONGO_USER = process.env.MONGO_USER;
