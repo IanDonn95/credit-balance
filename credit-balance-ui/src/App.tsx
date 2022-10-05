@@ -14,7 +14,7 @@ function App() {
 	const handleAddDebt = (creditor: Omit<Creditor, 'id'>) => {
 		return addCreditor(creditor)
 			.then(setCreditors)
-			.catch(e => console.error(e)); // we could add toast error popups to handle potential errors here, but it felt out of scope
+			.catch(e => console.error(e)); // adding toast errors felt out of scope
 	};
 
 	return <div className="app">
